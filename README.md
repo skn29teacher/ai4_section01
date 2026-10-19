@@ -217,7 +217,6 @@ git remote add origin https://github.com/skn29teacher/ai4_lecture.git
 
 # 7-2. 원격 저장소 변경은 기존 저장소 연결정보를  삭제하고 다시 연결
 git remote remove origin
-
 git remote add origin https://github.com/skn29teacher/ai4_lecture.git
 
 # 8. 변경사항 커밋
