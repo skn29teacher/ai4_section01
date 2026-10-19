@@ -202,7 +202,7 @@ git push
 아래 예시는 **2단계에서 원격 저장소를 빈 저장소로 생성했고, 3단계에서 VS Code 작업 폴더를 열었으며, `README.md` 파일을 작성한 상태**를 전제로 한다.
 
 ```bash
-# 4. Git 작성자 정보 설정
+# 4. Git 작성자 정보 설정 
 git config --global user.name "본인 Git 사용자 이름"
 git config --global user.email "본인 이메일@example.com"
 
