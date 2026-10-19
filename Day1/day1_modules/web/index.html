@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python 기초 실습실</title>
+  <style>
+    :root{color-scheme:light;--ink:#20312b;--muted:#63736b;--green:#176c4c;--line:#dde5dd;--paper:#fff;--bg:#f3f5ef}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Malgun Gothic",system-ui,sans-serif;line-height:1.65}
+    .wrap{max-width:1120px;margin:auto;padding:44px 28px}header{margin-bottom:32px}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:2px}h1{font-size:36px;letter-spacing:-1.8px;margin:10px 0}header p{color:var(--muted);margin:0}
+    .layout{display:grid;grid-template-columns:230px 1fr;gap:24px}nav{display:flex;flex-direction:column;gap:8px}button,input,select{font:inherit}button{cursor:pointer}nav button{text-align:left;border:1px solid transparent;border-radius:12px;padding:15px;background:transparent;color:var(--muted)}nav button[aria-pressed="true"]{background:var(--paper);border-color:var(--line);color:var(--green);font-weight:700;box-shadow:0 3px 12px #20312b08}nav span{display:inline-block;margin-right:12px;font-size:12px;font-weight:700}
+    main{min-width:0}.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:30px}h2{font-size:25px;letter-spacing:-1px;margin:6px 0 8px}.intro{color:var(--muted);margin:0 0 24px}.tag{color:var(--green);font-size:12px;font-weight:700}form{margin:22px 0}.fields{display:flex;gap:16px;flex-wrap:wrap}label{display:block;font-size:14px;font-weight:700;flex:1;min-width:100px}input,select{display:block;width:100%;margin-top:7px;padding:10px 12px;border:1px solid #b9c7bc;border-radius:8px;background:#fff;color:var(--ink)}input:focus,select:focus,button:focus-visible,summary:focus-visible{outline:3px solid #9fd8be;outline-offset:3px}.action{margin-top:16px;background:var(--green);color:#fff;border:0;border-radius:8px;padding:11px 22px;font-weight:700}.secondary{background:#eaf0e9;color:var(--ink);margin-left:8px}button:disabled{opacity:.5;cursor:default}.result{margin-top:22px;background:#f1f6f1;border:1px solid #dbe8db;border-radius:12px;padding:20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;min-height:80px}.result-title{font-size:11px;letter-spacing:1px;color:var(--green);font-weight:800;margin-bottom:8px}.error{color:#a02e2e}.task{font-size:14px;margin:22px 0;color:var(--muted);border-left:3px solid #baceb5;padding-left:14px}details{border-top:1px solid var(--line);padding-top:18px;margin-top:24px}summary{cursor:pointer;font-size:14px;font-weight:700}pre{background:#20312b;color:#e8f3e9;padding:20px;border-radius:10px;overflow:auto;line-height:1.7;font-size:13px}footer{font-size:12px;color:var(--muted);margin-top:24px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}td,th{padding:9px;border-bottom:1px solid #d5e3d5;text-align:left}th{color:var(--green)}.history{padding-left:24px;color:var(--muted);font-size:14px}.history:empty{display:none}[hidden]{display:none!important}
+    @media(max-width:760px){.wrap{padding:24px 16px}h1{font-size:29px}.layout{grid-template-columns:1fr}nav{flex-direction:row;overflow:auto}nav button{white-space:nowrap;padding:10px}nav span{margin-right:6px}.card{padding:22px}.fields.five label{flex:1 1 70px}.secondary{margin-left:0;margin-right:8px}h2{font-size:23px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="eyebrow">DAY 01 · PRACTICE LAB</div><h1>Python 기초 실습실</h1><p>값을 바꾸고, 결과를 확인하고, 코드의 흐름을 익혀보세요.</p></header>
+  <div class="layout">
+    <nav aria-label="실습 선택">
+      <button type="button" data-page="variables" aria-pressed="true" aria-controls="variables"><span>01</span>변수와 연산</button>
+      <button type="button" data-page="conditions" aria-pressed="false" aria-controls="conditions"><span>02</span>입력과 조건문</button>
+      <button type="button" data-page="lists" aria-pressed="false" aria-controls="lists"><span>03</span>리스트와 반복문</button>
+      <button type="button" data-page="multiplication" aria-pressed="false" aria-controls="multiplication"><span>04</span>구구단</button>
+      <button type="button" data-page="game" aria-pressed="false" aria-controls="game"><span>05</span>숫자 맞추기</button>
+    </nav>
+    <main>
+      <section class="card" id="variables" aria-labelledby="title-1">
+        <div class="tag">변수 · 정수 · 산술 연산</div><h2 id="title-1">두 숫자로 시작하기</h2><p class="intro">변수에 저장한 두 숫자의 합을 구합니다. 숫자를 바꾸어 결과를 비교해보세요.</p>
+        <form id="variables-form"><div class="fields"><label>첫 번째 숫자<input id="number1" type="number" step="1" value="100" required></label><label>두 번째 숫자<input id="number2" type="number" step="1" value="200" required></label></div><button class="action">계산하기</button></form>
+        <div class="result" aria-live="polite"><div class="result-title">RESULT</div><div id="variables-result">계산하기를 누르면 결과가 표시됩니다.</div></div>
+        <p class="task">추가 과제: Python 코드에 뺄셈, 곱셈, 나눗셈 출력도 추가해보세요.</p>
+        <details><summary>Python 예제 보기</summary><pre><code>number1 = 100
+number2 = 200
+print("number1 + number2 =", number1 + number2)</code></pre></details>
+      </section>
+      <section class="card" id="conditions" hidden aria-labelledby="title-2">
+        <div class="tag">입력 · 비교 연산 · if / else</div><h2 id="title-2">합격 기준은 60점</h2><p class="intro">점수가 60점 이상이면 합격입니다. 59, 60, 61을 차례로 넣어보세요.</p>
+        <form id="conditions-form"><label>점수 (0~100)<input id="score" type="number" min="0" max="100" step="1" value="60" required></label><button class="action">합격 여부 확인</button></form>
+        <div class="result" aria-live="polite"><div class="result-title">RESULT</div><div id="conditions-result">점수를 입력하고 결과를 확인하세요.</div></div>
+        <p class="task">추가 과제: Python 코드에서도 0~100 범위만 입력받도록 수정해보세요.</p>
+        <details><summary>Python 예제 보기</summary><pre><code>score = int(input("점수를 입력하세요: "))
+if score &gt;= 60:
+    print("합격")
+else:
+    print("불합격")</code></pre></details>
+      </section>
+      <section class="card" id="lists" hidden aria-labelledby="title-3">
+        <div class="tag">리스트 · for · 나머지 연산 %</div><h2 id="title-3">리스트에서 짝수 찾기</h2><p class="intro">정수 5개를 모아 리스트를 만들고, 2로 나눈 나머지가 0인 숫자를 찾습니다.</p>
+        <form id="lists-form"><div class="fields five">
+          <label>숫자 1<input name="list-number" type="number" step="1" value="1" required></label><label>숫자 2<input name="list-number" type="number" step="1" value="2" required></label><label>숫자 3<input name="list-number" type="number" step="1" value="3" required></label><label>숫자 4<input name="list-number" type="number" step="1" value="4" required></label><label>숫자 5<input name="list-number" type="number" step="1" value="5" required></label>
+        </div><button class="action">짝수 찾기</button></form>
+        <div class="result" aria-live="polite"><div class="result-title">RESULT</div><div id="lists-result">입력한 리스트와 짝수가 여기에 표시됩니다.</div></div>
+        <p class="task">추가 과제: 홀수만 출력하도록 조건을 바꾸고 짝수의 개수도 구해보세요.</p>
+        <details><summary>Python 예제 보기</summary><pre><code>scores = []
+for i in range(5):
+    score = int(input(f"{i + 1}번째 숫자: "))
+    scores.append(score)
+
+for number in scores:
+    if number % 2 == 0:
+        print(number)</code></pre></details>
+      </section>
+      <section class="card" id="multiplication" hidden aria-labelledby="title-4">
+        <div class="tag">중첩 for · range · 출력 순서</div><h2 id="title-4">반복문으로 만드는 구구단</h2><p class="intro">두 반복문을 겹쳐 구구단을 만듭니다. 원래 예제의 두 출력 방식을 비교해보세요.</p>
+        <form id="multiplication-form"><label>출력 방식<select id="table-mode"><option value="short">연습 A · 2~4단 × 1~4</option><option value="full">연습 B · 2~9단 × 1~9</option></select></label><button class="action">구구단 출력</button></form>
+        <div class="result" aria-live="polite"><div class="result-title">RESULT</div><div id="multiplication-result">출력 방식을 선택하고 구구단을 만들어보세요.</div></div>
+        <p class="task">추가 과제: Python에서 원하는 단을 입력받아 1~9까지 출력하세요. range(a, b)는 a부터 b−1까지 생성합니다.</p>
+        <details><summary>Python 예제 보기</summary><pre><code># 연습 A: 한 행에 같은 단을 출력
+for dan in range(2, 5):
+    for i in range(1, 5):
+        print(f"{dan} x {i} = {dan * i}", end="\t")
+    print()
+
+# 연습 B: 한 행에 2~9단을 출력
+for multiplier in range(1, 10):
+    for dan in range(2, 10):
+        print(f"{dan} x {multiplier} = {dan * multiplier}", end="\t")
+    print()</code></pre></details>
+      </section>
+      <section class="card" id="game" hidden aria-labelledby="title-5">
+        <div class="tag">난수 · 반복 · 조건 분기</div><h2 id="title-5">숨겨진 숫자를 찾아보세요</h2><p class="intro">1~100 사이의 정수를 골랐습니다. 힌트를 읽고 다음 숫자를 입력하세요.</p>
+        <form id="game-form"><label>예상 숫자 (1~100)<input id="guess" type="number" min="1" max="100" step="1" required autocomplete="off"></label><button id="guess-button" class="action">정답 확인</button><button id="restart" class="action secondary" type="button">새 게임</button></form>
+        <div class="result" aria-live="polite"><div class="result-title">RESULT</div><div id="game-result">첫 번째 숫자를 입력하세요. 시도 횟수: 0</div></div>
+        <ol id="history" class="history" aria-label="시도 기록"></ol>
+        <p class="task">추가 과제: Python 게임의 시도를 7번으로 제한하고, 실패하면 정답을 공개해보세요.</p>
+        <details><summary>Python 예제 보기</summary><pre><code>import random
+
+answer = random.randint(1, 100)
+count = 0
+while True:
+    guess = int(input("1~100: "))
+    if not 1 &lt;= guess &lt;= 100:
+        continue
+    count += 1
+    if guess &gt; answer:
+        print("정답보다 큽니다.")
+    elif guess &lt; answer:
+        print("정답보다 작습니다.")
+    else:
+        print(f"정답! 총 시도 횟수: {count}")
+        break</code></pre></details>
+      </section>
+      <footer>설치 없이 브라우저에서 실행됩니다. 화면의 계산은 JavaScript로 처리하며, Python 예제는 학습용으로 제공합니다.</footer>
+    </main>
+  </div>
+</div>
+<script>
+  'use strict';
+  const byId = id => document.getElementById(id);
+  function showResult(id, text, error = false) {
+    const output = byId(id);
+    output.textContent = text;
+    output.classList.toggle('error', error);
+  }
+  function integer(input) {
+    if (input.value.trim() === '') throw new Error('모든 칸에 정수를 입력하세요.');
+    const value = Number(input.value);
+    if (!Number.isSafeInteger(value)) throw new Error('정확하게 계산할 수 있는 범위의 정수를 입력하세요.');
+    return value;
+  }
+  function onSubmit(id, output, callback) {
+    byId(id).addEventListener('submit', event => {
+      event.preventDefault();
+      try { callback(); } catch (error) { showResult(output, error.message, true); }
+    });
+  }
+  document.querySelectorAll('[data-page]').forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('[data-page]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      document.querySelectorAll('main > section').forEach(section => { section.hidden = section.id !== button.dataset.page; });
+    });
+  });
+  onSubmit('variables-form', 'variables-result', () => {
+    const a = integer(byId('number1')), b = integer(byId('number2'));
+    if (!Number.isSafeInteger(a + b)) throw new Error('합이 너무 큽니다. 더 작은 정수를 입력하세요.');
+    showResult('variables-result', `${a} + ${b} = ${a + b}`);
+  });
+  onSubmit('conditions-form', 'conditions-result', () => {
+    const score = integer(byId('score'));
+    if (score < 0 || score > 100) throw new Error('0~100 사이의 점수를 입력하세요.');
+    showResult('conditions-result', `${score}점 → ${score >= 60 ? '합격' : '불합격'}\n조건 score >= 60: ${score >= 60 ? 'True' : 'False'}`);
+  });
+  onSubmit('lists-form', 'lists-result', () => {
+    const values = Array.from(document.querySelectorAll('[name="list-number"]'), integer);
+    const evens = values.filter(value => value % 2 === 0);
+    showResult('lists-result', `입력 리스트: [${values.join(', ')}]\n짝수: ${evens.length ? evens.join(', ') : '없음'}\n짝수 개수: ${evens.length}`);
+  });
+  onSubmit('multiplication-form', 'multiplication-result', () => {
+    const full = byId('table-mode').value === 'full';
+    const table = document.createElement('table');
+    const caption = document.createElement('caption');
+    caption.textContent = full ? '2~9단 전체 구구단' : '2~4단, 각 단의 1~4배';
+    table.append(caption);
+    for (let row = 1; row <= (full ? 9 : 3); row++) {
+      const tr = document.createElement('tr');
+      for (let col = 1; col <= (full ? 8 : 4); col++) {
+        const dan = full ? col + 1 : row + 1;
+        const multiplier = full ? row : col;
+        const td = document.createElement('td');
+        td.textContent = `${dan} × ${multiplier} = ${dan * multiplier}`;
+        tr.append(td);
+      }
+      table.append(tr);
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    wrap.append(table);
+    byId('multiplication-result').replaceChildren(wrap);
+  });
+  let answer = Math.floor(Math.random() * 100) + 1;
+  let attempts = 0, finished = false;
+  onSubmit('game-form', 'game-result', () => {
+    if (finished) return;
+    const guess = integer(byId('guess'));
+    if (guess < 1 || guess > 100) throw new Error('1~100 사이의 정수를 입력하세요.');
+    attempts++;
+    const hint = guess === answer ? '정답입니다!' : guess > answer ? '정답보다 큽니다. 더 작은 수를 입력하세요.' : '정답보다 작습니다. 더 큰 수를 입력하세요.';
+    showResult('game-result', `${hint}\n시도 횟수: ${attempts}`);
+    const item = document.createElement('li');
+    item.textContent = `${guess} → ${guess === answer ? '정답' : guess > answer ? '큼' : '작음'}`;
+    byId('history').append(item);
+    if (guess === answer) {
+      finished = true;
+      byId('guess-button').disabled = true;
+      byId('guess').disabled = true;
+    } else { byId('guess').select(); }
+  });
+  byId('restart').addEventListener('click', () => {
+    answer = Math.floor(Math.random() * 100) + 1;
+    attempts = 0; finished = false;
+    byId('game-form').reset();
+    byId('guess-button').disabled = false;
+    byId('guess').disabled = false;
+    byId('history').replaceChildren();
+    showResult('game-result', '새 숫자를 골랐습니다. 시도 횟수: 0');
+    byId('guess').focus();
+  });
+</script>
+</body>
+</html>
