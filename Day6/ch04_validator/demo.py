@@ -1,42 +1,46 @@
+"""04장: field_validator before/after, model_validator after."""
 from datetime import date
-from pydantic import BaseModel,Field,ValidationError,field_validator,model_validator    
+from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
+
 
 class Signup(BaseModel):
     username: str = Field(min_length=3)
     password: str = Field(min_length=8)
-    password_confirm:str
-    tags : list[str] = []
+    password_confirm: str
+    tags: list[str] = []
 
-    @field_validator("username")
+    @field_validator('username')
     @classmethod
-    def normal_username(cls,value:str) ->str:
+    def normalize_username(cls, value: str) -> str:
         text = value.strip().lower()
         if ' ' in text:
-            raise ValueError('아이디에는 공백을 사용 할 수 없습니다.')
+            raise ValueError('아이디에는 공백을 사용할 수 없습니다')
         return text
 
-    @field_validator('tags',mode='before')
+    @field_validator('tags', mode='before')
     @classmethod
-    def parse_tags(cls,value:object)->object:
-        if isinstance(value,str):
-            return [ item.strip() for item in value.split(',') if item.strip()  ]
+    def parse_tags(cls, value: object) -> object:
+        if isinstance(value, str):
+            return [item.strip() for item in value.split(',') if item.strip()]
         return value
 
     @model_validator(mode='after')
     def verify_password(self) -> 'Signup':
         if self.password != self.password_confirm:
-            raise ValueError('비밀번호가 일치하지 않습니다.')
+            raise ValueError('비밀번호 확인 값이 다릅니다')
         return self
 
+
 class Reservation(BaseModel):
-    start:date
-    end:date
-    
+    start: date
+    end: date
+
     @model_validator(mode='after')
     def validate_period(self) -> 'Reservation':
-        if self.start > self.end:
-            raise ValueError('종료일은 시작일보다 클수 없습니다.')
+        if self.end < self.start:
+            raise ValueError('종료일은 시작일보다 빠를 수 없습니다')
         return self
+
 
 def main() -> None:
     signup = Signup(username='  STUDENT01  ', password='password12',
@@ -47,6 +51,8 @@ def main() -> None:
         Signup(username='goodname', password='password12', password_confirm='wrong')
     except ValidationError as error:
         print('STEP 3 - 검증 실패:', error.errors()[0]['type'])
+    print('04장 성공')
+
 
 if __name__ == '__main__':
-    main()            
+    main()

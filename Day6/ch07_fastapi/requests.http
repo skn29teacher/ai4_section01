@@ -1,0 +1,28 @@
+@baseUrl = http://127.0.0.1:8000
+
+### 메인
+GET {{baseUrl}}/
+
+### 목록
+GET {{baseUrl}}/tasks
+
+### 정상 등록 (201)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{"title":"Pydantic 실습","done":false}
+
+### 잘못된 bool (422)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{"title":"연습","done":"yes"}
+
+### 일부 변경 (PATCH)
+PATCH {{baseUrl}}/tasks/1
+Content-Type: application/json
+
+{"done":true}
+
+### 없는 ID (404)
+GET {{baseUrl}}/tasks/999
