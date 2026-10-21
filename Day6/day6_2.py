@@ -20,13 +20,15 @@ def main() ->None:
 
     # 필수 필드 누락
     try:
-        Member(username='kim')
+        Member(username='kim',age=20)
         # Member.model_validate({'username':'kim'})
+        
+        # memberout 객체생성
+        memberout = MemberOut(id=1,username='lee',age=20)
+        print(memberout)
     except ValidationError as e:
         print(e.errors()[0]['loc'], e.errors()[0]['type'])
-
-    # memberout 객체생성
-    memberout = MemberOut(id=1)
-    print(memberout)
+    
+    
 if __name__ == '__main__':
     main()
