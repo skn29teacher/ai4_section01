@@ -15,7 +15,7 @@ class Signup(BaseModel):
             raise ValueError('아이디에는 공백을 사용 할 수 없습니다.')
         return text
 
-    @field_validator('tag',mode='before')
+    @field_validator('tags',mode='before')
     @classmethod
     def parse_tags(cls,value:object)->object:
         if isinstance(value,str):
