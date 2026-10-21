@@ -12,10 +12,15 @@ class Registration(BaseModel):
     agreed : bool=Field(strict=True)
 
 def main()->None:
-    user1 = Registration(name='lee',age = '50',email='lee@abc.com',code='STU-0001')
+    user1 = Registration(name='lee',age = '50',email='lee@abc.com',code='STU-0001',agreed=True)
     print('검증성공', user1.model_dump())
     print('오류확인')
     try:
         user2 = Registration(name='lee',age = '500',email='lee@abccom',code='STU-001')
+        print(user2.age)
     except ValidationError as e:
-        print(e)
+        for error in e.errors():
+            print(error['loc'],error['type'])
+
+if __name__ == '__main__':
+    main()
