@@ -1,4 +1,4 @@
-import day6_2
+import Day6.ch02_basemodel.day6_2 as day6_2
 
 member = day6_2.Member(username='홍길동',age=20,active=True,nickname=None)
 if member.age > 19:
