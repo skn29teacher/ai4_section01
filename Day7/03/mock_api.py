@@ -1,3 +1,4 @@
+# 외부 api 서버로 9000포트에서 실행
 import asyncio
 from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse, PlainTextResponse, Response
