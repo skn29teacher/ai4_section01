@@ -1,4 +1,5 @@
 # 외부 api 서버로 9000포트에서 실행
+# uvicorn Day7.03.mock_api:app --reload --port 9000
 import asyncio
 from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse, PlainTextResponse, Response

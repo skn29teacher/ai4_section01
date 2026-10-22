@@ -1,3 +1,4 @@
+# uvicorn Day7.03.main:app --reload
 from fastapi import FastAPI
 import httpx
 import os
