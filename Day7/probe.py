@@ -28,7 +28,7 @@ async def main():
         trust_env=False
     )as client:
         await compare(client,'/bad')
-        await compare(client,'/bad')
+        await compare(client,'/good')
 
 if __name__ == '__main__':
     asyncio.run(main())
