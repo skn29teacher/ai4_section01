@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FastAPI 동기 블로킹과 비동기 처리를 상품 재고 조회로 비교하는 학습 앱">
+  <title>재고 조회 실험실 · Sync vs Async</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav" aria-label="주요 메뉴">
+      <a class="brand" href="#top" aria-label="재고 조회 실험실 홈">
+        <span class="brand-mark">S/A</span>
+        <span>재고 조회 실험실</span>
+      </a>
+      <a class="nav-link" href="#learn">원리 보기</a>
+    </nav>
+
+    <div class="hero-content" id="top">
+      <div>
+        <p class="eyebrow">FASTAPI INTERACTIVE LAB</p>
+        <h1>주문이 몰릴 때,<br><span>서버는 멈출까?</span></h1>
+        <p class="hero-copy">
+          쇼핑몰이 세 물류센터의 재고를 동시에 확인합니다. 같은 2초짜리 조회가
+          왜 전체 6초가 되기도, 2초가 되기도 하는지 직접 실행해 보세요.
+        </p>
+        <a class="primary-link" href="#experiment">실험 시작하기 <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-visual" aria-label="세 주문이 서버로 전달되는 모습">
+        <div class="parcel parcel-one">01</div>
+        <div class="parcel parcel-two">02</div>
+        <div class="parcel parcel-three">03</div>
+        <div class="server-tower">
+          <span></span><span></span><span></span>
+          <strong>API</strong>
+        </div>
+        <div class="route-line"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="experiment" id="experiment">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow dark">LIVE EXPERIMENT</p>
+          <h2>같은 요청, 다른 처리 방식</h2>
+        </div>
+        <p>각 버튼은 상품 3개의 재고 요청을 브라우저에서 거의 동시에 보냅니다.</p>
+      </div>
+
+      <div class="mode-picker" role="group" aria-label="실험 방식 선택">
+        <button class="mode-button danger" data-mode="blocking">
+          <span class="button-index">01</span>
+          <span><strong>블로킹 실행</strong><small>이벤트 루프에서 time.sleep</small></span>
+        </button>
+        <button class="mode-button success" data-mode="async">
+          <span class="button-index">02</span>
+          <span><strong>비동기 실행</strong><small>await asyncio.sleep</small></span>
+        </button>
+        <button class="mode-button neutral" data-mode="threaded">
+          <span class="button-index">03</span>
+          <span><strong>스레드 실행</strong><small>await asyncio.to_thread</small></span>
+        </button>
+        <button class="compare-button" id="compare-all">전체 비교</button>
+      </div>
+
+      <div class="status-line" aria-live="polite">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">실험을 선택해 주세요.</span>
+        <span class="total-time"><small>전체 시간</small><strong id="total-time">—</strong></span>
+      </div>
+
+      <div class="product-grid" id="product-grid">
+        <article class="product-card" data-product="1">
+          <span class="product-number">01</span>
+          <div class="product-icon keyboard" aria-hidden="true">⌨</div>
+          <h3>무선 키보드</h3>
+          <p>서울 A센터</p>
+          <div class="progress"><span></span></div>
+          <strong class="card-result">대기 중</strong>
+        </article>
+        <article class="product-card" data-product="2">
+          <span class="product-number">02</span>
+          <div class="product-icon hub" aria-hidden="true">⌘</div>
+          <h3>USB-C 허브</h3>
+          <p>인천 B센터</p>
+          <div class="progress"><span></span></div>
+          <strong class="card-result">대기 중</strong>
+        </article>
+        <article class="product-card" data-product="3">
+          <span class="product-number">03</span>
+          <div class="product-icon camera" aria-hidden="true">◉</div>
+          <h3>웹캠</h3>
+          <p>부산 C센터</p>
+          <div class="progress"><span></span></div>
+          <strong class="card-result">대기 중</strong>
+        </article>
+      </div>
+
+      <div class="metrics">
+        <div class="health-card">
+          <span>서버 상태 확인</span>
+          <strong id="health-time">—</strong>
+          <p id="health-note">실험 시작 0.25초 뒤 <code>/api/health</code>를 호출합니다.</p>
+        </div>
+        <div class="log-card">
+          <div class="log-title"><span>요청 타임라인</span><button id="clear-log">지우기</button></div>
+          <ol id="event-log" aria-live="polite">
+            <li><time>00.00s</time><span>실험 준비 완료</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison" aria-labelledby="comparison-title">
+      <div class="section-heading light">
+        <div>
+          <p class="eyebrow">RESULT BOARD</p>
+          <h2 id="comparison-title">측정 결과 비교</h2>
+        </div>
+        <p>버튼을 실행할 때마다 실제 측정값으로 막대가 갱신됩니다.</p>
+      </div>
+      <div class="chart" id="chart">
+        <div class="chart-row" data-chart="blocking"><span>블로킹</span><div><i></i></div><strong>미측정</strong></div>
+        <div class="chart-row" data-chart="async"><span>비동기</span><div><i></i></div><strong>미측정</strong></div>
+        <div class="chart-row" data-chart="threaded"><span>스레드</span><div><i></i></div><strong>미측정</strong></div>
+      </div>
+    </section>
+
+    <section class="learn" id="learn">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow dark">UNDER THE HOOD</p>
+          <h2>무슨 차이일까요?</h2>
+        </div>
+      </div>
+
+      <div class="lesson-grid">
+        <article class="lesson blocked">
+          <span class="lesson-label">BLOCKING</span>
+          <h3>점원이 창고 답을 기다리며 멈춤</h3>
+          <pre><code>async def product():
+    data = get_product()  # time.sleep(2)
+    return data</code></pre>
+          <p>이벤트 루프 스레드가 잠들어 다른 주문과 상태 확인도 처리하지 못합니다.</p>
+        </article>
+        <article class="lesson async">
+          <span class="lesson-label">ASYNC</span>
+          <h3>기다리는 동안 다음 주문을 접수</h3>
+          <pre><code>async def product():
+    await asyncio.sleep(2)
+    return data</code></pre>
+          <p><code>await</code>에서 제어권을 돌려주므로 여러 대기 시간이 서로 겹칩니다.</p>
+        </article>
+        <article class="lesson threaded">
+          <span class="lesson-label">THREAD OFFLOAD</span>
+          <h3>기존 창고 전화는 다른 직원에게</h3>
+          <pre><code>async def product():
+    data = await asyncio.to_thread(
+        get_product
+    )
+    return data</code></pre>
+          <p>동기 라이브러리를 바꿀 수 없다면 별도 작업 스레드에서 실행합니다.</p>
+        </article>
+      </div>
+
+      <aside class="takeaway">
+        <span>핵심 기억하기</span>
+        <p><strong>async def</strong>라고 쓰는 것만으로 모든 코드가 비동기가 되지는 않습니다.</p>
+      </aside>
+    </section>
+  </main>
+
+  <footer>
+    <span>DAY 7 · FASTAPI LAB</span>
+    <span>브라우저 개발자 도구의 Network 탭에서도 요청 시간을 확인해 보세요.</span>
+  </footer>
+</body>
+</html>
+
