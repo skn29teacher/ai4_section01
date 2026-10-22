@@ -15,7 +15,7 @@ import asyncio
 from time import perf_counter
 
 async def fetch(client, item_id):
-    response = await client.get(f'/item/{item_id}')
+    response = await client.get(f'/items/{item_id}')
     response.raise_for_status()
     return response.json()
 
