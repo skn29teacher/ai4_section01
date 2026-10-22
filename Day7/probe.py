@@ -11,3 +11,24 @@ async def request_one(client, path, number):
     print(f'{path}요청 {number}: {response.status_code}, {elapsed:.2f}')
     return response.json()
 
+async def compare(client,path):
+    print(f'\n{path}: 요청 3개 시작')
+    start = perf_counter()
+    await asyncio.gather(
+        request_one(client, path,1),
+        request_one(client, path,2),
+        request_one(client, path,3)
+    )
+    print(f'전체 완료 시간: {perf_counter() - start:.2f}초')
+
+async def main():
+    async with httpx.AsyncClient(
+        base_url = "http://127.0.0.1:8000",
+        timeout = 20.0,
+        trust_env=False
+    )as client:
+        await compare(client,'/bad')
+        await compare(client,'/bad')
+
+if __name__ == '__main__':
+    asyncio.run(main())
