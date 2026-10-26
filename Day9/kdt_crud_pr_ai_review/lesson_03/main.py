@@ -18,6 +18,6 @@ def replace_task(payload: TaskPut):
     return item
 
 @app.patch("/tasks/1")
-def patch_task(payload: TaskPatch):
+def patch_task(payload: TaskPatch):    
     item.update(payload.model_dump())
     return item

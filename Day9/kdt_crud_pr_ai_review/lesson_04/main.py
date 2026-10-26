@@ -27,4 +27,5 @@ def update_task(task_id: int, payload: TaskIn):
 
 @app.delete("/tasks/{task_id}", status_code=204)
 def delete_task(task_id: int):
-    tasks.pop(task_id)
+    tasks.pop(task_id)   
+    print(tasks)
