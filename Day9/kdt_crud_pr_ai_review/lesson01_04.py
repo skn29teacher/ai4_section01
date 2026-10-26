@@ -43,7 +43,7 @@ class TaskPatch(BaseModel):
 def find_task(task_id: int):
     for task in tasks:
         if task["id"] == task_id:
-            return task
+            return task    
 
     raise HTTPException(
         status_code=404,
@@ -58,12 +58,14 @@ def find_task(task_id: int):
 def create_task(payload: TaskInput):
 
     # ID 중복 검사
-    for task in tasks:
-        if task["id"] == payload.id:
-            raise HTTPException(
-                status_code=409,
-                detail="Task ID already exists"
-            )
+    # for task in tasks:
+    #     if task["id"] == payload.id:
+    #         raise HTTPException(
+    #             status_code=409,
+    #             detail="Task ID already exists"
+    #         )
+    if payload.id in [task["id"] for task in tasks]:
+        raise HTTPException(status_code=409,detail="Task ID already exists")
 
     task = payload.model_dump()
     tasks.append(task)
@@ -101,7 +103,6 @@ def replace_task(task_id: int, payload: TaskInput):
             status_code=400,
             detail="Task ID mismatch"
         )
-
     # 전체 데이터 교체
     task.clear()
     task.update(payload.model_dump())
@@ -127,6 +128,12 @@ def patch_task(task_id: int, payload: TaskPatch):
 
 # -----------------------------
 # DELETE: DELETE
+# def delete_task(task_id: int):
+#     for index, task in enumerate(tasks):
+#         if task["id"] == task_id:
+#             tasks.pop(index)
+#             return
+#     raise HTTPException(status_code=404, detail="Task not found")      
 # -----------------------------
 @app.delete("/tasks/{task_id}", status_code=204)
 def delete_task(task_id: int):
