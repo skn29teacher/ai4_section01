@@ -18,6 +18,10 @@ def create_database(db_path):
 
 def add_user(db_path, user_id, nickname, email, points):
     connection = sqlite3.connect(db_path, autocommit=False)
+    
+    # if not nickname or not email or not points:  # 3개중 하나라도 null이면 True
+    #     raise ValueError()
+
     try:
         connection.execute(
             "INSERT INTO users (id, nickname, email, points) VALUES (?, ?, ?, ?)",
