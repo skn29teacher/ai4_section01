@@ -1,4 +1,4 @@
-"""사용자를 저장하고 연결을 다시 열어 확인한다. 저장 누락 버그가 있다."""
+"""사용자를 저장하고 연결을 다시 열어 확인한다. commit으로 저장을 확정한 비교 코드다."""
 import argparse
 from pathlib import Path
 import sqlite3
@@ -6,22 +6,21 @@ import sqlite3
 
 def save_user(db_path, nickname):
     connection = sqlite3.connect(db_path, autocommit=False)
-    try:        
+    try:
         connection.execute(
             "CREATE TABLE IF NOT EXISTS users ("
             "id INTEGER PRIMARY KEY, nickname TEXT NOT NULL)"
-        )        
+        )
+        connection.commit()  # 테이블 준비를 확정한다.
         connection.execute(
             "INSERT INTO users (nickname) VALUES (?)", (nickname,)
         )
         rows = connection.execute(
             "SELECT id, nickname FROM users ORDER BY id"
         ).fetchall()
-        # 사용자 저장을 확정하는 줄을 확인해 보세요.
-        connection.commit()
+        connection.commit()  # INSERT한 사용자 저장을 확정한다.
         return rows
     finally:
-        
         connection.close()
 
 
