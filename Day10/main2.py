@@ -1,4 +1,4 @@
-"""도시별 사용자를 점수순으로 조회한다."""
+"""도시별 사용자를 점수순으로 조회한다. LIMIT 0을 잃는 버그가 있다."""
 import argparse
 from pathlib import Path
 import sqlite3
