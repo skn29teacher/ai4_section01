@@ -6,7 +6,7 @@ import sqlite3
 
 def save_user(db_path, nickname):
     connection = sqlite3.connect(db_path, autocommit=False)
-    try:
+    try:        
         connection.execute(
             "CREATE TABLE IF NOT EXISTS users ("
             "id INTEGER PRIMARY KEY, nickname TEXT NOT NULL)"
