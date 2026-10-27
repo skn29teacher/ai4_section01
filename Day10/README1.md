@@ -33,7 +33,7 @@ Python 3.12 이상을 사용한다. 아래 명령은 압축을 C:\kdt\KDT_SQLITE
 
 ```bat
 cd /d C:\kdt\KDT_SQLITE\lesson_01
-py -3.12 -m venv .venv
+python -m venv .venv
 .venv\Scripts\activate
 python -c "import sqlite3; print('SQLite', sqlite3.sqlite_version)"
 ```
