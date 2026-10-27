@@ -1,0 +1,6 @@
+{
+  "SECRET_KEY": "REPLACE_WITH_A_RANDOM_SECRET_OF_AT_LEAST_32_CHARACTERS",
+  "DATABASE_PATH": "/home/YOURUSERNAME/note-demo/data/note_demo.db",
+  "PRODUCTION": true,
+  "TRUSTED_HOSTS": ["YOURUSERNAME.pythonanywhere.com"]
+}

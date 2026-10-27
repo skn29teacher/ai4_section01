@@ -1,0 +1,11 @@
+.venv/
+.local/
+data/
+__pycache__/
+.pytest_cache/
+pytest-cache-files-*/
+*.pyc
+*.db
+*.db-*
+.env
+config.private.json
