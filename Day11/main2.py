@@ -23,6 +23,7 @@ with psycopg.connect(
     conn.execute(
         "create schema if not exists ch2;"
     )
+    conn.execute('''drop table if exists ch2.users;''')
 
     conn.execute(
         """
@@ -53,4 +54,28 @@ with psycopg.connect(
     for user_id,user_name,user_email in rows:
         print(user_id,user_name,user_email)
 
+    # 수정  esunshin@korea.com  강감찬
+    conn.execute('''update ch2.users
+        set name = %s
+        where email = %s
+        ;''', ('강감찬','esunshin@korea.com' ) )
+
+    # 전체 조회
+    print('전체 조회-----------------------------------')
+    rows = conn.execute("""
+        select id, name, email from ch2.users order by id
+    """).fetchall()
+    for user_id,user_name,user_email in rows:
+        print(user_id,user_name,user_email)
+
+    # 삭제    
+    conn.execute('''delete from ch2.users where email =  %s;''',("yoonbongil@korea.com",))
+
+    # 전체 조회
+    print('전체 조회-----------------------------------')
+    rows = conn.execute("""
+        select id, name, email from ch2.users order by id
+    """).fetchall()
+    for user_id,user_name,user_email in rows:
+        print(user_id,user_name,user_email)
 print('접속 종료')    
