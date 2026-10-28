@@ -2,5 +2,6 @@
     "host":"db.cvnqvoikbrvgzlzfoloa.supabase.co",
     "port":5432,
     "dbname":"postgres",
-    "user":"postgres"
+    "user":"postgres",
+    "password":"I9CdDLg0ZaRxO5sj"
 }
