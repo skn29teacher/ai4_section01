@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from getpass import getpass
 
-# pip install pycopg
+# pip install "psycopg[binary]"
 import psycopg
 
 # config.json 설정파일을 로드
