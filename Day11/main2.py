@@ -26,7 +26,7 @@ with psycopg.connect(
 
     conn.execute(
         """
-        create table if not exists users(
+        create table if not exists ch2.users(
         id bigint generated always as identity primary key,
         name text not null,
         email text not null unique
@@ -41,14 +41,14 @@ with psycopg.connect(
 
     with conn.cursor() as cur:
         cur.executemany("""
-            insert into users(name, email)
+            insert into ch2.users(name, email)
             values(%s, %s)            
         """, users)
     print('사용자 저장 완료')
 
     # 전체 조회
     rows = conn.execute("""
-        select id, name, email from users order by id
+        select id, name, email from ch2.users order by id
     """).fetchall()
     for user_id,user_name,user_email in rows:
         print(user_id,user_name,user_email)
