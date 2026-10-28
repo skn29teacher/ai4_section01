@@ -8,6 +8,58 @@ Flask + SQLite로 만든 한국어 게시판 데모입니다. 회원가입·로�
 
 **문서 확인일: 2026-10-27 (한국 시간).** 아래 PythonAnywhere 절차는 확인일의 공식 자료를 바탕으로 작성했습니다. 실제 계정에서 업로드·공개 배포는 수행하지 않았습니다.
 
+## 0. 실제 로컬 프로젝트 구조
+
+프로젝트 루트는 **`C:\AI4\Day10\demo`**입니다. 아래 구조에서 CMD 명령을 실행합니다. 화면 캡처 아래쪽에 보이지 않는 `wsgi.py`도 루트에 있으며 배포에 필요합니다.
+
+```text
+demo/
+├─ .local/
+│  └─ config.json              # 로컬 비공개 설정·SECRET_KEY·DB 절대 경로
+├─ .venv/                     # 로컬 Python 가상환경
+├─ app/
+│  ├─ __init__.py             # Flask 앱 생성
+│  ├─ auth.py                 # 로그인 상태·권한·CSRF 검사
+│  ├─ config.py               # 비공개 설정 읽기
+│  ├─ db.py                   # SQLite 연결
+│  ├─ routes/api.py           # 회원·게시글·댓글·관리 API
+│  ├─ services/masking.py     # 키워드 마스킹
+│  └─ static/                 # index.html·app.js·style.css
+├─ data/
+│  └─ note_demo.db            # 실제 회원·게시글·댓글·표현 사전 데이터
+├─ db/
+│  ├─ schema.sql              # 테이블·제약·인덱스 정의
+│  └─ seed.json               # 초기 표현 사전
+├─ docs/                      # 검증 기록·출처·화면 캡처
+├─ scripts/                   # 설정 생성·DB 최초 생성·백업 도구
+├─ tests/                     # 자동 테스트
+├─ __pycache__/               # Python 실행 캐시
+├─ .pytest_cache/             # 테스트 실행 캐시
+├─ .gitignore
+├─ ai_agent_prompt.md
+├─ implementation_plan.md
+├─ prompt.md
+├─ config.example.json        # 비밀값이 없는 설정 형식 예제
+├─ README.md
+├─ requirements.txt           # 배포용 실행 의존성
+├─ requirements-dev.txt       # 로컬 테스트 의존성
+└─ wsgi.py                    # 배포 서버가 불러오는 진입점
+```
+
+`db/`는 **DB를 만드는 설계·초기 데이터 파일**, `data/`는 **실제로 사용 중인 DB 파일**입니다. 코드 수정 때 `data/`나 `.local/`을 삭제할 필요가 없습니다.
+
+| 로컬 항목 | PythonAnywhere 최초 배포 시 처리 |
+| --- | --- |
+| `app/`, `db/`, `scripts/` | 하위 구조 그대로 업로드; 내부 `__pycache__`·`.pyc` 제외 |
+| `wsgi.py`, `requirements.txt` | 서버 프로젝트 루트에 업로드 |
+| `docs/`, README·설계 문서, `config.example.json` | 필요하면 업로드; 실행 필수 항목은 아님 |
+| `.venv/` | 업로드하지 않고 서버에서 별도 생성 |
+| `.local/` | 업로드하지 않고 서버용 비공개 설정을 별도 생성 |
+| `data/` | 이 안내의 최초 배포는 새 DB를 서버에서 생성; 로컬 데모 DB는 업로드하지 않음 |
+| `tests/`, `requirements-dev.txt`, 실행 캐시 | 배포 실행에 불필요 |
+
+이 문서에서 서버 폴더를 `/home/YOURUSERNAME/note-demo`로 표기한 것은 **배포 경로 예시**입니다. 로컬 `demo` 폴더명을 바꿀 필요는 없습니다. `demo`의 내용물을 서버 `note-demo` 바로 아래에 배치하여 `/home/YOURUSERNAME/note-demo/app/`, `/home/YOURUSERNAME/note-demo/wsgi.py`가 되게 합니다. `note-demo/demo/app/`처럼 폴더가 한 단계 더 생기지 않도록 확인하세요.
+
 ## 1. Windows CMD에서 로컬 실행
 
 로컬 터미널은 **Windows 명령 프롬프트(CMD)** 기준입니다. Python 3.10 이상을 사용하세요. 이 프로젝트는 **Python 3.13.12, Flask 3.1.3**으로 테스트했습니다. 명령은 `python`을 사용합니다. `(.venv)`가 프롬프트 앞에 표시되고 `.venv\Scripts\python.exe`가 실제로 존재하면 가상환경 생성 단계를 건너뜁니다. 폴더를 삭제했다면 새 CMD에서 가상환경부터 다시 생성해야 합니다.
@@ -82,7 +134,7 @@ SQLite는 모든 계정에서 사용할 수 있습니다. 새 무료 계정은 M
 아래 `YOURUSERNAME`은 실제 계정명으로 바꾸세요. 계정에 따라 도메인 접미사가 다를 수 있으므로 **Web 탭에 실제 표시되는 도메인**을 사용합니다.
 
 1. PythonAnywhere의 **Files**에서 `/home/YOURUSERNAME/note-demo` 폴더를 만듭니다.
-2. `app/`, `db/`, `scripts/`, `wsgi.py`, `requirements.txt`를 같은 구조로 업로드합니다. 문서도 필요하면 함께 업로드합니다.
+2. 위 구조표의 `app/`, `db/`, `scripts/`, `wsgi.py`, `requirements.txt`를 서버 프로젝트 루트 바로 아래에 같은 구조로 업로드합니다. 하위 폴더의 `__pycache__`와 `.pyc`는 제외합니다. 문서도 필요하면 함께 업로드합니다.
 3. `.venv/`, `.local/`, 로컬 `data/`, 테스트 캐시, 실제 비밀 설정은 올리지 않습니다. 여러 파일은 소스 전용 ZIP으로 올린 후 Bash 콘솔에서 해당 폴더에 풉니다.
 
 ### 3-2. 가상환경과 의존성
