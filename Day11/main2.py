@@ -21,17 +21,36 @@ with psycopg.connect(
 )as conn:
     # 데이터 베이스(스키마) 생성
     conn.execute(
-        "create schema if not exist ch2;"
+        "create schema if not exists ch2;"
     )
 
     conn.execute(
-"""
-create table if not exist users(
-  id bigint generated always as identity primary key,
-  name text not null,
-  email text not null unique
-);
-"""
+        """
+        create table if not exists users(
+        id bigint generated always as identity primary key,
+        name text not null,
+        email text not null unique
+        );
+        """
     )
-print('테이블 준비완료')    
-# 사용자 2명 입력
+    print('테이블 준비완료')    
+    # 사용자 2명 입력
+    users = [
+        ("이순신",'esunshin@korea.com'),("윤봉길","yoonbongil@korea.com")
+    ]
+
+    with conn.cursor() as cur:
+        cur.executemany("""
+            insert into users(name, email)
+            values(%, %)            
+        """, users)
+    print('사용자 저장 완료')
+
+    # 전체 조회
+    rows = conn.execute("""
+        select id, name, email from users order by id
+    """).fetchall()
+    for user_id,user_name,user_email in rows:
+        print(user_id,user_name,user_email)
+
+print('접속 종료')    
