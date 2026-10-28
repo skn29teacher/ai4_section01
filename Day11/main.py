@@ -15,7 +15,7 @@ with psycopg.connect(
     port=config['port'],
     dbname = config.get('dbname',config.get('database')),
     user = config['user'],
-    password = getpass('supabase 비밀번호 입력하세요: '),
+    password = config['password'],
     sslmode = 'require',
     connect_timeout=10,
 )as conn:
