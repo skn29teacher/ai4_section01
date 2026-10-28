@@ -42,7 +42,7 @@ with psycopg.connect(
     with conn.cursor() as cur:
         cur.executemany("""
             insert into users(name, email)
-            values(%, %)            
+            values(%s, %s)            
         """, users)
     print('사용자 저장 완료')
 
