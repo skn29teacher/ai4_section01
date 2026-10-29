@@ -1,6 +1,6 @@
 # 쇼핑몰 MVP
 
-현재 완료 범위는 **STEP 1 설계 + STEP 2 기본 구조·DB 연결·인증 API 작성**입니다. 실행 확인은 사용자가 진행합니다. 상품·주문·결제 API와 화면, Render 설정은 후속 단계에서 추가합니다.
+현재 완료 범위는 **STEP 1 설계 + STEP 2 인증 API + STEP 3 상품·장바구니·주문·모의 결제 API 작성**입니다. 실행 확인은 사용자가 진행합니다. 회원정보·구매내역 API, 화면, Render 설정은 후속 단계에서 추가합니다.
 
 ## 기술 구성
 
@@ -14,15 +14,16 @@ project/
 │  ├─ main.py                 # 앱 시작·종료, 정적 파일, 오류 처리
 │  ├─ core/                   # 설정, 비밀번호·JWT·쿠키, 인증 의존성, CSRF
 │  ├─ db/                     # 연결 풀과 매개변수 바인딩 SQL
-│  ├─ routers/auth.py         # 회원가입·로그인·로그아웃
-│  ├─ services/auth.py        # 인증 업무 처리
-│  └─ schemas/auth.py         # 요청 검증·응답 필드
+│  ├─ routers/                # 인증·상품·장바구니·주문·결제 API
+│  ├─ services/               # 인증·상품·장바구니·주문·결제 업무 처리
+│  └─ schemas/                # 요청 검증·응답 필드
 ├─ static/css/               # STEP 5 예정
 ├─ static/js/                # STEP 5 예정
 ├─ templates/                # STEP 5 예정
 ├─ sql/schema.sql
 ├─ sql/seed.sql
 ├─ docs/step-2-auth.md        # 설정·Swagger 확인 시나리오
+├─ docs/step-3-shopping.md    # 구매 API·재고·결제 확인 시나리오
 ├─ requirements.txt
 ├─ .env.example
 └─ README.md
@@ -64,9 +65,27 @@ JWT를 HttpOnly 쿠키로 전달해 서버 세션 테이블 없이 인증을 처
 | POST | /api/auth/signup | 201 | 회원 생성, 자동 로그인 없음 |
 | POST | /api/auth/login | 200 | 사용자 응답과 HttpOnly 쿠키 설정 |
 | POST | /api/auth/logout | 204 | 인증 쿠키 제거, 응답 본문 없음 |
+| GET | /api/products | 200 | 공개 상품 목록 |
+| GET | /api/products/{product_id} | 200 | 공개 상품 상세 |
+| GET | /api/cart | 200 | 본인 장바구니 |
+| POST | /api/cart/items | 200 | 상품 담기·같은 상품 수량 더하기 |
+| PATCH | /api/cart/items/{product_id} | 200 | 수량을 지정한 값으로 변경 |
+| DELETE | /api/cart/items/{product_id} | 200 | 상품 삭제·갱신된 장바구니 반환 |
+| POST | /api/orders | 201 | cart 또는 buy_now 주문 생성 |
+| GET | /api/orders/{order_id} | 200 | 본인 주문 상세 |
+| POST | /api/orders/{order_id}/payments | 200 / 409 | 모의 결제·재고 부족 실패 기록 |
 
-실패 상태·입력 예시·쿠키 확인은 [STEP 2 안내](docs/step-2-auth.md)에 있습니다.
+인증은 [STEP 2 안내](docs/step-2-auth.md), 구매 과정은 [STEP 3 안내](docs/step-3-shopping.md)를 확인하세요. API는 JSON 응답이며 비로그인은 보호 API에서 401을 반환합니다. 로그인 화면 이동은 STEP 6에서 연결합니다.
+
+## STEP 3 실행
+
+기존 가상환경이 활성화된 `C:\AI4` 터미널에서 실행합니다. requirements.txt와 DB 테이블 변경이 없어 추가 설치나 schema.sql 재실행은 필요하지 않습니다.
+
+```powershell
+Set-Location 'C:\AI4'
+python -m uvicorn app.main:app --app-dir .\Day12-Demo\project --reload --reload-dir .\Day12-Demo\project\app --host 127.0.0.1 --port 8000
+```
 
 ## 다음 단계
 
-STEP 3 상품·장바구니·주문·모의 결제 → STEP 4 회원정보·구매내역 → STEP 5 화면 → STEP 6 로그인 복귀 → STEP 7 Render 배포 순서로 진행합니다. 각 단계는 사용자 지시 후 시작합니다.
+STEP 4 회원정보·구매내역 → STEP 5 화면 → STEP 6 로그인 복귀 → STEP 7 Render 배포 순서로 진행합니다. 각 단계는 사용자 지시 후 시작합니다.

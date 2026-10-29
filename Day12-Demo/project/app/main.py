@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from psycopg import OperationalError
 from psycopg_pool import PoolTimeout
 from starlette.concurrency import run_in_threadpool
@@ -13,6 +14,11 @@ from app.core.config import PROJECT_ROOT, get_settings
 from app.core.csrf import enforce_same_origin
 from app.db.connection import create_pool
 from app.routers.auth import router as auth_router
+from app.routers.cart import router as cart_router
+from app.routers.orders import router as orders_router
+from app.routers.payments import router as payments_router
+from app.routers.products import router as products_router
+from app.routers.members import router as members_router
 
 
 logger = logging.getLogger(__name__)
@@ -38,11 +44,21 @@ async def lifespan(app: FastAPI):
         await run_in_threadpool(pool.close)
 
 
-app = FastAPI(title="쇼핑몰 MVP", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="쇼핑몰 MVP", version="0.2.0", lifespan=lifespan)
 app.middleware("http")(enforce_same_origin)
 app.include_router(auth_router)
-# 화면은 STEP 5에서 추가합니다. 파일 경로는 실행 위치에 의존하지 않습니다.
+app.include_router(products_router)
+app.include_router(cart_router)
+app.include_router(orders_router)
+app.include_router(payments_router)
+app.include_router(members_router)
+# HTML/CSS/JS는 FastAPI가 직접 서빙합니다. 경로는 실행 위치에 의존하지 않습니다.
 app.mount("/static", StaticFiles(directory=PROJECT_ROOT / "static"), name="static")
+
+
+@app.get("/", include_in_schema=False)
+def home_page():
+    return FileResponse(PROJECT_ROOT / "templates" / "index.html")
 
 
 @app.middleware("http")

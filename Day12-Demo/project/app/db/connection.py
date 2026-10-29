@@ -16,6 +16,9 @@ def create_pool(settings: Settings) -> ConnectionPool:
         timeout=5,
         open=False,
         kwargs={
+            # 인증 SELECT가 암묵적 트랜잭션을 열지 않도록 합니다.
+            # 변경 작업은 서비스의 connection.transaction()에서 명시적으로 커밋합니다.
+            "autocommit": True,
             "row_factory": dict_row,
             "connect_timeout": 5,
             "sslmode": "require",
@@ -27,6 +30,6 @@ def create_pool(settings: Settings) -> ConnectionPool:
 
 
 def get_connection(request: Request) -> Iterator[Connection]:
-    # 성공 시 commit, 예외 시 rollback 후 연결을 풀에 반환합니다.
+    # 연결 수명만 관리합니다. 변경 트랜잭션은 각 서비스에서 응답 전에 완료합니다.
     with request.app.state.db_pool.connection() as connection:
         yield connection
