@@ -89,3 +89,4 @@ python -m uvicorn app.main:app --app-dir .\Day12-Demo\project --reload --reload-
 ## 다음 단계
 
 STEP 4 회원정보·구매내역 → STEP 5 화면 → STEP 6 로그인 복귀 → STEP 7 Render 배포 순서로 진행합니다. 각 단계는 사용자 지시 후 시작합니다.
+"# moa-shop" 
