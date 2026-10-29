@@ -4,3 +4,27 @@ output
 .venv
 .json
 .env
+
+
+# Day1-Day8
+Day1-Day8/**/config.json
+Day1-Day8/**/.env.*
+Day1-Day8/**/venv/
+Day1-Day8/**/venv314/
+Day1-Day8/**/__pycache__/
+Day1-Day8/**/*.py[cod]
+
+# Day10 demo
+Day10/demo/**/.local/
+Day10/demo/**/data/
+Day10/demo/**/__pycache__/
+Day10/demo/**/.pytest_cache/
+Day10/demo/**/pytest-cache-files-*/
+Day10/demo/**/*.pyc
+Day10/demo/**/*.db
+Day10/demo/**/*.db-*
+Day10/demo/**/config.private.json
+
+# Day7 async shop demo
+Day7/01/async-shop-demo/**/__pycache__/
+Day7/01/async-shop-demo/**/*.py[cod]
