@@ -4,7 +4,7 @@ import psycopg
 import uvicorn
 from fastapi import APIRouter, FastAPI, Request
 from psycopg.rows import dict_row
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field,EmailStr
 import os
 from dotenv import load_dotenv
 
@@ -17,7 +17,7 @@ router = APIRouter(tags=["users"])
 class UserCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
     name: str = Field(min_length=1, max_length=50)
-    email: str = Field(min_length=1, max_length=100)
+    email: EmailStr
 
 
 def initialize_database(db_config):
