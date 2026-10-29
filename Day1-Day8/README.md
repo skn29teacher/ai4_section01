@@ -75,18 +75,18 @@ taskkill /PID 12345 /T /F
 
 ### 1. GitHub에 배포할 코드 올리기
 
-현재 Render에서 선택한 배포 저장소는 [skn29teacher/guestbook](https://github.com/skn29teacher/guestbook), 브랜치는 `main`입니다. 이 저장소의 최상위에 `main.py`, `requirements.txt`, `templates/index.html`이 있는 것을 확인했습니다. 따라서 Render의 Root Directory는 비워 둡니다.
+현재 로컬 저장소는 `C:\AI4`, 브랜치는 `main`, 연결된 원격 저장소는 [skn29teacher/ai4_section01](https://github.com/skn29teacher/ai4_section01)입니다. 아래 안내는 이 저장소 안의 `Day1-Day8` 폴더를 배포하는 기준입니다. 다른 계정으로 진행하면 그 계정이 접근할 수 있는 저장소를 사용하세요.
 
-Render는 GitHub에 올라간 코드로 배포합니다. 아래 명령은 이후 코드를 수정해서 `guestbook` 저장소에 다시 올릴 때 사용하는 **로컬 Windows cmd의 `(.venv)` 터미널** 명령입니다. 로컬 원격 주소가 `guestbook`으로 연결된 작업 폴더에서 실행합니다.
+확인 시점에는 방명록 구현 파일이 아직 Git의 미추적 파일이었습니다. Render는 GitHub에 올라간 코드로 배포하므로, 로컬 저장만으로는 배포할 수 없습니다. 아래 명령은 **로컬 Windows cmd의 `(.venv)` 터미널**에서 실행합니다. 현재 터미널 위치가 `C:\AI4`라면 첫 줄은 생략해도 됩니다.
 
 ```bat
-git remote -v
-git status --short
-git add .
+cd /d C:\AI4
+git status --short -- Day1-Day8
+git add Day1-Day8
 git diff --cached --name-only
 ```
 
-출력에서 커밋할 파일을 확인합니다. `.venv`, `data/guestbook.db`, `*.db`가 보인다면 커밋하기 전에 `.gitignore`에 제외 규칙을 추가해야 합니다. 다른 작업의 파일이 이미 스테이징되어 있다면 함께 커밋되지 않도록 목록을 먼저 정리합니다. 이어서 실행합니다.
+출력에서 커밋할 파일을 확인합니다. `Day1-Day8/.gitignore`가 `data/`, `.venv/`, `*.db` 등을 제외하므로 로컬 DB와 가상환경은 업로드 대상에서 제외됩니다. 다른 작업의 파일이 이미 스테이징되어 있다면 함께 커밋되지 않도록 목록을 먼저 정리합니다. 이어서 실행합니다.
 
 ```bat
 git commit -m "Add guestbook app and Render deployment guide"
@@ -96,13 +96,15 @@ git push origin main
 GitHub 웹사이트에서 해당 저장소의 `main` 브랜치를 열어 다음 파일이 보이는지 확인합니다. 이 가이드를 작성하면서 위 커밋·푸시 명령을 대신 실행하지는 않았습니다.
 
 ```text
-main.py
-requirements.txt
-templates/
-  index.html
+Day1-Day8/
+  .gitignore
+  main.py
+  requirements.txt
+  templates/
+    index.html
 ```
 
-`git push`에서 권한 오류가 나면 로컬 원격 주소와 해당 GitHub 저장소에 쓰기 권한이 있는 계정인지 확인합니다.
+`git push`에서 권한 오류가 나면 해당 GitHub 저장소에 쓰기 권한이 있는 계정인지 확인합니다. 별도 저장소를 만든다면 **폴더 구조를 유지했는지** 확인하세요. `main.py`를 저장소 맨 위에 올린 경우에는 4단계의 Root Directory를 비워야 합니다.
 
 ### 2. Render 처음 방문 및 가입
 
@@ -117,14 +119,14 @@ templates/
 
 1. Render 대시보드 오른쪽 위 **+ New → Web Service**를 선택합니다. 이 앱은 Python 서버가 실행되는 Web Service입니다.
 2. 코드 가져오기 방식에서 **Git Provider**를 선택하고 GitHub를 연결합니다.
-3. GitHub의 Render 앱 권한 화면이 열리면 배포할 저장소를 포함하도록 설정합니다. 저장소를 선택할 수 있다면 `guestbook`을 선택합니다.
+3. GitHub의 Render 앱 권한 화면이 열리면 배포할 저장소를 포함하도록 설정합니다. 저장소를 선택할 수 있다면 `ai4_section01`을 선택합니다.
 4. Render 저장소 목록에서 해당 저장소를 찾아 **Connect**를 누릅니다.
 
 연결 메뉴를 별도로 찾아야 하면 **Account Settings → Account Security → Git Deployment Credentials → Add credential → GitHub**를 사용합니다. 저장소가 보이지 않으면 [Render GitHub 앱 설정](https://github.com/apps/render/installations/new)의 **Repository access**에 저장소가 포함되어 있는지 확인합니다. [공식 연결·문제 해결](https://render.com/docs/git-provider)
 
 ### 4. 생성 화면에 입력할 값
 
-아래 표는 현재 화면에 연결된 `skn29teacher/guestbook` 저장소를 배포하는 값입니다. 자동으로 입력된 명령이 있어도 표와 대조하세요.
+아래 표는 `ai4_section01` 저장소의 `Day1-Day8` 폴더를 배포하는 값입니다. 자동으로 입력된 명령이 있어도 표와 대조하세요.
 
 | 화면 항목 | 입력·선택할 값 | 설명 |
 | --- | --- | --- |
@@ -132,13 +134,13 @@ templates/
 | Language / Runtime | `Python 3` | Python 실행 환경 |
 | Branch | `main` | 코드가 올라간 브랜치 |
 | Region | `Singapore` 권장 | 한국 방문자를 고려한 선택. 생성 후 지역 변경은 새 서비스 생성 필요 |
-| Root Directory | **비워 둠** | `main.py`와 `requirements.txt`가 저장소 최상위에 있음 |
+| Root Directory | `Day1-Day8` | 저장소 아래의 앱 폴더. `C:\AI4` 같은 로컬 경로는 입력하지 않음 |
 | Build Command | `python -m pip install -r requirements.txt` | 실행에 필요한 패키지 설치 |
 | Start Command | `python -m uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1` | FastAPI 서버 시작 |
 | Compute / Instance Type | **`Free`** | 무료 실행 요금제 |
 | Health Check Path | `/health` | DB 접근까지 확인하는 앱 상태 경로 |
 
-Root Directory는 공백 그대로 둡니다. 위 Start Command의 **`$PORT`는 그대로 입력**합니다. Render의 Linux 서버가 제공하는 값이며, 이 명령은 로컬 Windows cmd에 입력하는 명령이 아닙니다. `--app-dir`와 `--reload`도 붙이지 않습니다. [Web Service 설정·포트](https://render.com/docs/web-services), [FastAPI 배포 예시](https://render.com/docs/deploy-fastapi), [지역 안내](https://render.com/docs/regions)
+Root Directory를 지정하면 빌드·시작 명령은 그 폴더에서 실행됩니다. 그래서 `--app-dir Day1-Day8`를 다시 붙이지 않습니다. 위 Start Command의 **`$PORT`는 그대로 입력**합니다. Render의 Linux 서버가 제공하는 값이며, 이 명령은 로컬 Windows cmd에 입력하는 명령이 아닙니다. `--reload`도 붙이지 않습니다. [Web Service 설정·포트](https://render.com/docs/web-services), [FastAPI 배포 예시](https://render.com/docs/deploy-fastapi), [지역 안내](https://render.com/docs/regions)
 
 ### 5. Python 버전과 상태 확인 경로 설정
 
@@ -156,7 +158,7 @@ Health Check Path가 생성 화면에 보이지 않으면 배포 후 **Settings 
 
 ### 6. 배포 시작 및 성공 확인
 
-1. **Free**, 비어 있는 Root Directory, 명령어, `PYTHON_VERSION`을 다시 확인합니다.
+1. **Free**, Root Directory, 명령어, `PYTHON_VERSION`을 다시 확인합니다.
 2. 화면 맨 아래 **Deploy** 또는 **Create Web Service**를 누릅니다. 공식 문서에 두 버튼명이 사용되며, 가입 후 실제 화면의 생성 버튼을 사용합니다.
 3. 생성된 서비스의 **Deploys** 페이지에서 로그를 확인합니다. 패키지 설치 후 Uvicorn 서버가 시작되어야 합니다.
 4. 상태가 **Live**가 되면 서비스 페이지에 표시된 `https://서비스주소.onrender.com` 링크를 엽니다. 실제 주소는 화면의 링크를 사용합니다.
@@ -195,8 +197,8 @@ Render 서버는 로컬 터미널을 닫거나 `Ctrl+C`를 눌러도 계속 실�
 | 증상 | 확인할 내용 |
 | --- | --- |
 | 저장소가 목록에 없음 | GitHub 계정과 Render 앱의 Repository access 확인 |
-| `requirements.txt`를 찾을 수 없음 | GitHub 저장소 최상위에 파일이 있는지, Root Directory가 비어 있는지 확인 |
-| `Could not import module "main"` | GitHub 저장소 최상위의 `main.py`와 비어 있는 Root Directory 확인 |
+| `requirements.txt`를 찾을 수 없음 | GitHub에 파일을 올렸는지, Root Directory가 `Day1-Day8`인지 확인 |
+| `Could not import module "main"` | GitHub의 `Day1-Day8/main.py` 존재와 Root Directory 확인 |
 | Pydantic·`pydantic-core`·`maturin` 설치 실패 | 로그의 Python 버전을 확인하고 `PYTHON_VERSION=3.13.12`로 전체 재빌드 |
 | 열린 포트를 찾지 못함 | Start Command의 `--host 0.0.0.0 --port $PORT` 확인 |
 | `templates/index.html` 관련 오류 | GitHub에도 `templates/index.html`이 같은 구조와 대소문자로 올라갔는지 확인 |
