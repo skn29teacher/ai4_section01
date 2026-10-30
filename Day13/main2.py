@@ -4,7 +4,8 @@ from typing import Annotated
 # HTTPX는 타임아웃과 연결 수명, python-dotenv는 .env 로딩을 담당합니다.
 import httpx
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request, Response, Header
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 # 요청 검증 실패를 JSON 오류로 바꾸고, Pydantic으로 입력·응답 모델을 정의합니다.
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -15,8 +16,7 @@ from supabase.client import ClientOptions
 
 
 # load_dotenv는 파일 값을 환경변수에 추가하고 os.getenv는 그 값을 조회합니다.
-load_dotenv(
-    ".env",             # 현재 차시 폴더의 설정만 로드합니다.
+load_dotenv(    
     override=False,     # 기존 프로세스 환경변수가 우선합니다. 기본값도 False입니다.
     interpolate=False,  # ${...}를 치환하지 않고 그대로 보존합니다. 기본값은 True입니다.
 )
@@ -137,12 +137,15 @@ def verified_user(token: str):
     return CurrentUser(id=result.user.id, email=result.user.email)
 
 
-# Header()는 authorization 매개변수를 HTTP 요청 헤더에서 가져오도록 지정합니다.
-# 기본 None을 두어 누락된 헤더도 직접 401로 처리합니다. body JSON에서 받지 않습니다.
+# HTTPBearer를 사용하면 OpenAPI에 Bearer 인증 스킴과 Swagger의 Authorize UI가 등록됩니다.
+bearer_scheme = HTTPBearer(auto_error=False)
+
+
 @app.get("/me", response_model=CurrentUser)
-def me(authorization: Annotated[str | None, Header()] = None):
-    scheme, _, token = (authorization or "").partition(" ")
-    if scheme.lower() != "bearer" or not token.strip():
+def me(
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
+):
+    if credentials is None or credentials.scheme.lower() != "bearer" or not credentials.credentials.strip():
         raise HTTPException(401, "Authorization: Bearer 토큰이 필요합니다.", headers={"WWW-Authenticate": "Bearer"})
     # 헤더 형식 확인과 JWT 진위 검증은 서로 다릅니다. 실제 검증은 get_user가 담당합니다.
-    return verified_user(token.strip())
+    return verified_user(credentials.credentials.strip())
