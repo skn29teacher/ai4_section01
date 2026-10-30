@@ -85,7 +85,7 @@ class LoginResponse(BaseModel):
 from fastapi import Response
 
 @app.post('/auth/login',response_model=LoginResponse) # 반환할 json구조 검증하고 swagger에 표시
-def login(body:LoginRequest,response=Response):
+def login(body: LoginRequest, response: Response):
     with httpx.Client(timeout=10.0) as http_client:
         supabase = create_client(
             supabase_url=supabase_url,
