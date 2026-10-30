@@ -11,8 +11,8 @@ from supabase.client import ClientOptions
 # 환경변수 load
 load_dotenv(override=True)
 
-supabase_url = os.getenv('SUPABASE_URL').strip().rsplit("/")
-supabase_key = os.getenv('SUPABASE_PUBLISHABLE_KEY').strip()
+supabase_url = os.getenv("SUPABASE_URL","").strip().rstrip("/")
+supabase_key = os.getenv('SUPABASE_PUBLISHABLE_KEY',"").strip()
 if not supabase_url or not supabase_key:
     raise RuntimeError('SUPABASE_URL or SUPABASE_PUBLISHABLE_KEY missing')
 
