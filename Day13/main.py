@@ -191,3 +191,5 @@ def signup(body: SignupRequest):
     return SignupResponse(
         message="가입 요청을 처리했습니다. 이메일 확인 설정이 켜져 있다면 받은 메일을 확인하세요."
     )
+
+#Bearer JWT로 현재 사용자 확인
