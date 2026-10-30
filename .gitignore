@@ -28,3 +28,5 @@ Day10/demo/**/config.private.json
 # Day7 async shop demo
 Day7/01/async-shop-demo/**/__pycache__/
 Day7/01/async-shop-demo/**/*.py[cod]
+
+Day12-Demo
