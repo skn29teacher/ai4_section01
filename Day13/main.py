@@ -67,3 +67,50 @@ def signup(body:SignupRequest):
         raise HTTPException(503,'인증서비스에 연결할수 없습니다. 잠시후 다시 시도하세요')
     return SignupResponse(message="가입요청을 처리했습니다. 이메일 확인 설정이 켜져있다면 받은 메일을 확인")
 
+class LoginRequest(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    email : EmailStr
+    password:SecretStr=Field(min_length=1)
+
+class LoginResponse(BaseModel):
+    # 토큰을 호출자에게 전달- 응답필드는 str로 선언
+    access_token :str
+    refresh_token: str
+    token_type:str
+    expires_in : int
+    expires_at : int | None
+    usr_id : str
+    email : str | None
+
+from fastapi import Response
+
+@app.post('/auth/login',response_model=LoginResponse) # 반환할 json구조 검증하고 swagger에 표시
+def login(body:LoginRequest,response=Response):
+    with httpx.Client(timeout=10.0) as http_client:
+        supabase = create_client(
+            supabase_url=supabase_url,
+            supabase_key=supabase_key,
+            options=ClientOptions(
+                persist_session=False,
+                auto_refresh_token=False,
+                httpx_client=http_client
+            )
+        )
+        result = supabase.auth.sign_in_with_password(
+            {
+                'email':str(body.email),
+                'password':body.password.get_secret_value()
+            }
+        )
+    session = result.session
+    user = result.user
+    response.headers['Cache-Control'] = 'no-store'
+    return LoginResponse(
+        access_token=session.access_token,
+        refresh_token=session.refresh_token,
+        token_type=session.token_type,
+        expires_in=session.expires_in,
+        expires_at=session.expires_at,
+        usr_id=user.id,
+        email=user.email
+    )
