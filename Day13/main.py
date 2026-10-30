@@ -114,3 +114,18 @@ def login(body: LoginRequest, response: Response):
         usr_id=user.id,
         email=user.email
     )
+
+
+class TokenResponse(BaseModel):
+    access_token :str
+    refresh_token: str
+    token_type:str
+    expires_in : int
+    expires_at : int | None
+    usr_id : str
+    email : str | None
+# 필요한 정보만 담는다(토큰, 패스워드는 제외)
+class CurrentUser(BaseModel):
+    id:str
+    email:str | None
+    
