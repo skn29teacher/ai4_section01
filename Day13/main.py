@@ -18,8 +18,7 @@ from supabase.client import ClientOptions
 
 
 # lesson02 폴더에서 실행합니다. .env는 현재 작업 폴더를 기준으로 찾습니다.
-load_dotenv(
-    ".env",              # 로드할 설정 파일 이름입니다.
+load_dotenv(    
     override=False,      # 이미 설정된 환경변수가 .env보다 우선합니다.
     interpolate=False,   # 값의 ${...}를 다른 환경변수로 치환하지 않습니다.
 )
@@ -27,6 +26,7 @@ load_dotenv(
 # 두 번째 인자 ""는 값이 없을 때의 기본값입니다. 비밀값은 출력하지 않습니다.
 supabase_url = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
 supabase_key = os.getenv("SUPABASE_PUBLISHABLE_KEY", "").strip()
+
 if not supabase_url or not supabase_key:
     raise RuntimeError(".env 또는 환경변수의 SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY를 확인하세요.")
 if not supabase_url.startswith("https://"):
