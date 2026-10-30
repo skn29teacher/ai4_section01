@@ -11,8 +11,8 @@ from supabase.client import ClientOptions
 # 환경변수 load
 load_dotenv(override=True)
 
-supabase_url = os.getenv("SUPABASE_URL","").strip().rstrip("/")
-supabase_key = os.getenv('SUPABASE_PUBLISHABLE_KEY',"").strip()
+supabase_url = os.getenv('SUPABASE_URL',"").strip().rstrip("/")
+supabase_key = os.getenv('SUPABASE_PUBLISHABLE_KEY').strip()
 if not supabase_url or not supabase_key:
     raise RuntimeError('SUPABASE_URL or SUPABASE_PUBLISHABLE_KEY missing')
 
@@ -30,7 +30,7 @@ class SignupResponse(BaseModel):
 async def handelr_validation_error(_request:Request, exc:RequestValidationError):
     errors = [
         {'loc':error['loc'], 'type' : error['type']}
-        for error in exc.erros()
+        for error in exc.errors()
     ]
     return JSONResponse(status_code=422,content={'detail':errors})
 
