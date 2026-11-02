@@ -89,8 +89,9 @@ def cache_key(conn, owner):
     ).fetchone()[0]
     return f"lesson06:history:{owner}:v{version}"
 
-def load_history(conn, client, owner):
+def load_history(conn, client, owner):    
     key = cache_key(conn, owner)
+    print(f'key : {key}')
     raw = client.get(key)
     if raw is not None:  # 빈 목록을 담은 문자열 "[]"도 유효한 HIT다.
         return decode_history(raw), "HIT"
