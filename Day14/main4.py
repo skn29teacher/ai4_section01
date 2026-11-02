@@ -58,7 +58,7 @@ def main():
     if args.command != "chat" and args.text:
         raise ValueError("메시지는 chat 명령에서만 입력하세요.")
     # .env는 현재 작업 폴더에서 읽으며, 이미 존재하는 환경변수가 우선한다.
-    load_dotenv(".env", override=False, interpolate=False)
+    load_dotenv()
     host = os.getenv("REDIS_HOST", "")
     port_text = os.getenv("REDIS_PORT", "")
     if not host.strip() or not port_text.strip():
