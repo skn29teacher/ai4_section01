@@ -1,3 +1,8 @@
+# python main4.py create demo-a
+# python main4.py chat [새션이 발급한 id] "내 이름은 민수"
+# python main4.py chat [새션이 발급한 id] "내 이름이 뭐야?"
+# python main4.py history [새션이 발급한 id]
+
 # 세션별 대화 이력을 저장하고 응답에 전달
 
 # json은 메시지의 role/content 변환, secrets는 세션 ID, argparse는 명령 입력에 사용한다.
