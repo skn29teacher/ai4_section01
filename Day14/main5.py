@@ -41,4 +41,15 @@ def initialize(conn):
                 ],
             )
 
+def read_source(conn, owner):
+    '''owner:사용자  conn:db path'''
+    rows = conn.execute(
+        "select role,content from messages where owner = ? order by id desc limit ?",
+        (owner,MAX_MESSAGES)
+    ).fetchall()
+    return [ {'role':role,'content':content }   for role,content in rows  ]
 
+host,port,db_path =  read_settings()
+
+with closing(sqlite3.connect(db_path)) as conn:
+    initialize(conn)
