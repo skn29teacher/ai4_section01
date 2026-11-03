@@ -1,4 +1,4 @@
-"""Redis 세션을 확인한 뒤 Supabase에 메시지를 저장·조회한다."""
+""" 하이브리드 대화 백엔드 실습."""
 import os  # .env에서 로드된 환경변수를 조회한다.
 from uuid import UUID, uuid4  # UUID는 입력 검사, uuid4는 새 대화방 ID 생성에 쓴다.
 
@@ -144,7 +144,7 @@ def create_session(body: SessionCreate):
     session_id = str(uuid4())
     with connect_redis() as client:
         client.set(
-            f"kdt:hybrid:l04:session:{session_id}",  # 3차시의 임의 ID 세션과 분리한다.
+            f"kdt:hybrid:l05:session:{session_id}",  # 3차시의 임의 ID 세션과 분리한다.
             str(body.conversation_id),  # Redis에는 메시지가 아닌 대화방 ID만 저장한다.
             ex=SESSION_TTL_SECONDS,  # 발급 순간부터 흐르는 고정 만료 시간(초).
         )
@@ -160,7 +160,7 @@ def resolve_conversation(x_session_id):
     except ValueError:
         raise HTTPException(status_code=401, detail="세션 ID 형식이 올바르지 않습니다.") from None
     with connect_redis() as client:
-        raw = client.get(f"kdt:hybrid:l04:session:{session_id}")
+        raw = client.get(f"kdt:hybrid:l05:session:{session_id}")
     if raw is None:
         raise HTTPException(status_code=401, detail="세션이 없거나 만료되었습니다.")
     try:
@@ -205,6 +205,50 @@ def list_messages(x_session_id: str | None = Header(default=None)):
             (conversation_id,),
         ).fetchall()
     return rows
+
+
+# 현재 세션 정보와 TTL을 조회한다. 조회 자체는 연장하지 않는다.
+@app.get("/session")
+def session_status(x_session_id: str | None = Header(default=None)):
+    conversation_id = resolve_conversation(x_session_id)
+    with connect_redis() as client:
+        ttl = client.ttl(f"kdt:hybrid:l05:session:{UUID(x_session_id)}")
+    if ttl == -2:
+        raise HTTPException(status_code=401, detail="세션이 만료되었습니다.")
+    if ttl == -1:
+        raise HTTPException(status_code=503, detail="세션 만료 설정을 확인하세요.")
+    return {"conversation_id": str(conversation_id), "ttl": ttl}
+
+
+# 별도 요청으로만 연장한다. 메시지 저장/조회는 TTL을 바꾸지 않는다.
+@app.post("/session/renew")
+def renew_session(x_session_id: str | None = Header(default=None)):
+    conversation_id = resolve_conversation(x_session_id)
+    with connect_db() as conn:
+        found = conn.execute(
+            "SELECT id FROM kdt_hybrid.conversations WHERE id = %s", (conversation_id,)
+        ).fetchone()
+        if found is None:
+            raise HTTPException(status_code=404, detail="대화방을 찾을 수 없습니다.")
+    with connect_redis() as client:
+        renewed = client.expire(
+            f"kdt:hybrid:l05:session:{UUID(x_session_id)}",
+            SESSION_TTL_SECONDS,  # 현재 시점부터 이 초만큼 남도록 재설정한다.
+        )  # 키가 이미 사라졌으면 False다. EXPIRE는 없는 키를 만들지 않는다.
+    if not renewed:
+        raise HTTPException(status_code=401, detail="세션이 만료되었습니다.")
+    return {"expires_in": SESSION_TTL_SECONDS}
+
+
+@app.delete("/session")
+def end_session(x_session_id: str | None = Header(default=None)):
+    # 형식/존재를 먼저 확인하고 Redis 키만 삭제한다. DB 행은 삭제하지 않는다.
+    resolve_conversation(x_session_id)
+    with connect_redis() as client:
+        removed = client.delete(f"kdt:hybrid:l05:session:{UUID(x_session_id)}")
+    if not removed:
+        raise HTTPException(status_code=401, detail="세션이 만료되었습니다.")
+    return {"ended": True}
 
 
 # 초기화는 명시적으로 실행한다. Uvicorn import 시 DB를 변경하지 않는다.
