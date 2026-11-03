@@ -35,6 +35,7 @@ def health():
             with conn.cursor() as cur:  # sql 실행과 결과
                 cur.execute('select 1 as ok')
                 row = cur.fetchone()  # 기본반환형은 튜플 (1,)
+                print(row)
                 if row == (1,):
                     checks['supabase'] ='up'
 
@@ -56,4 +57,71 @@ def health():
         status_code=200 if ready else 503,
         content={'ready':ready, 'checks':checks}
     )
+# python -m uvicorn main1:app --host 127.0.0.1 --port 8000
 
+from pydantic import BaseModel,ConfigDict,Field
+from fastapi import HTTPException
+
+class ConversationCreate(BaseModel):
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
+    title:str = Field(min_length=1, max_length=100)
+class MessageCreate(BaseModel):
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
+    content:str = Field(min_length=1, max_length=1000)
+
+from psycopg.rows import dict_row  # 컬럼을 딕셔너리 행으로 받는다
+def connect_db():
+    # 호출한쪽의 with 정상 commit / 예외 rollback / 연결종료 담당
+    return psycopg.connect(
+        DB_URL,
+        connect_timeout=5,
+        sslmode='require',
+        row_factory=dict_row # 기본 튜플대신에 {컬럼:값} 읽는다
+    )
+
+def init_db():
+    with connect_db() as conn:
+        conn.execute("create schema if not exists kdt_hybrid")
+        conn.execute("""
+            create table if not exists kdt_hybrid.conversation(
+            id uuid primary key,
+            title varchar(100) not null check(length(trim(title)) > 0  ),
+            created_at timestamptz not null default current_timestamp
+            )
+            """)
+        conn.execute("""
+            create table if not exists kdt_hybrid.messages(
+                id bigint generated always as identity primary key,
+                conversation_id uuid not null
+                references kdt_hybrid.conversation(id),
+                content varchar(1000) not null check(length(trim(content))>0),
+                created_at timestamptz not null default current_timestamp
+            )
+            """)
+    print('테이블 준비 완료')
+@app.exception_handler(psycopg.Error)
+def database_error(_request, _exc):
+    # FastApi가 전달하는 요청 / 예외는 여기서 출력하지 않는다 모든 오류를 잡지 않는다
+    return JSONResponse(
+        status_code=503,  # 서비스 이용 불가
+        content={'detail':'db 처리에 실패했습니다. 연결정보와 테이블 상태를 확인하세요'}
+    )
+
+from uuid import UUID, uuid4
+@app.post('/conversations', status_code=201) # 성공시 201반환(원래는 200)
+def create_conversation(body: ConversationCreate):
+    conversation_id = uuid4()  
+    with connect_db() as conn:
+        row = conn.execute("""insert into kdt_hybrid.conversation(id,title)
+                        values(%s, %s) returning id,title,created_at
+        """,
+        (conversation_id,body.title),
+                     ).fetchone()  # returning 돌려준  행 하나를 읽는다
+        return row
+# 전체데이터를 반환하는 구조여서 소량의 데이터일때만 사용 및 테스트한다
+@app.get('/conversations')
+def list_conversation():
+    with connect_db() as conn:
+        rows = conn.execute("select id, title, created_at from kdt_hybrid.conversation order " \
+        "by created_at, id").fetchall()
+        return rows
