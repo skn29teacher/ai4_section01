@@ -4,7 +4,7 @@ output
 .venv
 .json
 .env
-
+__pycache__
 
 # Day1-Day8
 Day1-Day8/**/config.json
