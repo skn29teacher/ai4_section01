@@ -141,3 +141,13 @@ def create_messages(conversation_id:UUID, body:MessageCreate):
         (conversation_id,body.content),
                      ).fetchone()
         return row
+@app.get('/conversation/{conversation_id}/messages')
+def list_messages(conversation_id:UUID):
+    with connect_db() as conn:
+        rows = conn.execute(
+            """select id,conversation_id, content, created_at
+                from kdt_hybrid.messages where conversation_id= %s order by id
+            """,
+            (conversation_id,)
+        ).fetchall()
+    return rows
