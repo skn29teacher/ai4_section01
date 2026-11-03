@@ -93,7 +93,7 @@ def init_db():
             create table if not exists kdt_hybrid.messages(
                 id bigint generated always as identity primary key,
                 conversation_id uuid not null
-                references kdt_hybrid.conversation(id),
+                    references kdt_hybrid.conversation(id),
                 content varchar(1000) not null check(length(trim(content))>0),
                 created_at timestamptz not null default current_timestamp
             )
@@ -125,3 +125,19 @@ def list_conversation():
         rows = conn.execute("select id, title, created_at from kdt_hybrid.conversation order " \
         "by created_at, id").fetchall()
         return rows
+
+@app.post('/conversation/{conversation_id}/messages',status_code=201)
+def create_messages(conversation_id:UUID, body:MessageCreate):
+    with connect_db() as conn:
+        found = conn.execute(
+            "select id from kdt_hybrid.conversation where id = %s", (conversation_id,),
+            ).fetchone()
+        if found is None:
+            raise HTTPException(status_code=404,detail="대화방을 찾을수 없습니다.")
+        row = conn.execute("""
+            insert into kdt_hybrid.messages(conversation_id, content)
+            values(%s, %s) returning id, conversation_id,content
+        """,
+        (conversation_id,body.content),
+                     ).fetchone()
+        return row
