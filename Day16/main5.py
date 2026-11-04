@@ -41,6 +41,8 @@ for key, value in [("room_id", None), ("session_id", None), ("rows", [])]:
     if key not in st.session_state:
         st.session_state[key] = value
 
+import traceback
+
 try:
     # 실제 DB 대화방 목록이다. 연결 오류를 빈 목록으로 처리하지 않는다.
     rooms = api("GET", "/conversations")
@@ -93,7 +95,8 @@ except requests.exceptions.HTTPError as exc:
     elif code == 409:
         st.error("같은 요청 ID의 내용이 다릅니다. 미처리 내용을 바꾸지 말고 원본 요청을 확인하세요.")
     else:
-        st.error(f"서버 HTTP {code} 오류입니다. API·DB·Redis·모델 로그를 확인하세요.")
+        st.error(f"서버 HTTP {code} 오류입니다. API·DB·Redis·모델 로그를 확인하세요. {exc}")
+        traceback.print_exc()
 except requests.exceptions.Timeout:
     st.error("요청 대기 시간 초과입니다. 서버 처리가 완료됐을 수 있으므로 저장 결과를 먼저 확인하세요.")
 except requests.exceptions.RequestException:
