@@ -36,7 +36,7 @@ if st.button('ai 답변 받기'):
         )as response:
             response.raise_for_status()
             data = response.json()  # 객체로 복원
-        choice = data['choice'][0]
+        choice = data['choices'][0]
         answer = choice['message']['content']
         with st.chat_message('assistant'):
             st.text(answer.strip())
