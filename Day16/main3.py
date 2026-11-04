@@ -10,10 +10,11 @@ with st.sidebar:
 st.title('대화화면 프로토타입')    
 st.caption('대화 제목과 메세지를 배치하고 모의 응답을 확인합니다.')
 
-intpu_col, preview_col =  st.columns([1,2])
+intpu_col, preview_col =  st.columns([1,1], gap="large",vertical_alignment="top",
+    border=True)
 with intpu_col:
     st.subheader('메세지 작성')
-    messages = st.text_area('메세지',placeholder="예) 대화이력을 저장하는 이유는?")
+    messages = st.text_area('메세지',placeholder="예) 대화이력을 저장하는 이유는?",width="stretch")
     st.caption(f"선택한 형식:{style}")
     preview = st.button('대화미리보기')
 
