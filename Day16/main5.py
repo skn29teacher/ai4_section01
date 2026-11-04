@@ -7,7 +7,7 @@ import streamlit as st  # UI와 현재 연결의 식별자·미처리 작업 보
 from dotenv import load_dotenv
 
 # 현재 차시 폴더의 설정. 기존 프로세스 환경변수가 우선이며 ${...}를 치환하지 않는다.
-load_dotenv(".env", override=False, interpolate=False)
+load_dotenv(override=False, interpolate=False)
 API_BASE_URL = os.getenv("API_BASE_URL", "").strip().rstrip("/")
 
 
