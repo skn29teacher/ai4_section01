@@ -1,0 +1,3 @@
+HF_MODEL_ID=Qwen/Qwen2.5-0.5B-Instruct
+MODEL_DIR=../models/qwen2.5-0.5b-instruct
+BACKEND_URL=http://127.0.0.1:8000
