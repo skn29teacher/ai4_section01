@@ -19,6 +19,17 @@ def read_setting():
         model_dir = Path(__file__).resolve().parent / model_dir
     return settings['HF_MODEL_ID'], model_dir.resolve()
 
+def download_model(model_id, model_dir):
+    # 공개 모델의 필요한 파일만 다운로드 ONNX등 다른형식은 받지 않는다
+    snapshot_download(
+        repo_id=model_id,
+        local_dir=str(model_dir),
+        allow_patterns=[  # 모델구조 생성설정 토크나이저 가중치 이용조건만 받는다
+            "config.json", "generation_config.json", "tokenizer*.json",
+            "vocab.json", "merges.txt", "*.safetensors", "README.md", "LICENSE*",
+        ]
+    )
+
 
 def main():
     parser = argparse.ArgumentParser()
