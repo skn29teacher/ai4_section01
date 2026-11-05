@@ -1,3 +1,8 @@
+# 다운로드받은 모델의 modeling_exaone.py 파일에서
+# causal_mask = create_causal_mask( 를 찾아서
+# 두번째 매개변수를 input_embeds=inputs_embeds, 변경
+
+
 import torch
 import traceback
 import time
