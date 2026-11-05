@@ -29,6 +29,7 @@ def download_model(model_id, model_dir):
             "vocab.json", "merges.txt", "*.safetensors", "README.md", "LICENSE*",
         ]
     )
+    print('다운로드 완료')
 
 
 def main():
@@ -38,10 +39,11 @@ def main():
     )
     args = parser.parse_args()
     try:
-        model_id, model_dir = read_setting()
-        print(model_id,model_dir)
+        model_id, model_dir = read_setting()        
     except ValueError as err:
         parser.error(str(err))
-
+    else:
+        if args.command == 'download':
+            download_model(model_id=model_id,model_dir=model_dir)
 if __name__ =="__main__":
     main()
