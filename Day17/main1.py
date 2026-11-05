@@ -97,6 +97,9 @@ def show_app(model_dir):
     st.title('로컬모델')
     st.caption("cpu 로컬모델 한번의 질문과 답변")
     prompt = st.chat_input('짧은 질문을 입력하세요')
+    if prompt is None:
+        st.info("모델을 다운로드 중입니다...")
+        return
     # 문자 제한 토큰 제한은 토크나이져별로 확인
     if len(prompt) > 500:
         st.warning("질문을 500자 이내로 줄여주세요")
