@@ -6,7 +6,8 @@ import streamlit as st
 from dotenv import load_dotenv
 
 load_dotenv(".env", override=False, interpolate=False)  # 현재 폴더·기존 환경 우선·문자열 치환 끔.
-API_BASE_URL = os.getenv("API_BASE_URL", "").strip().rstrip("/")
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000").strip().rstrip("/")
+print("API_BASE_URL:",API_BASE_URL)
 if not API_BASE_URL or not API_BASE_URL.startswith(("http://", "https://")):
     st.error("API_BASE_URL 설정을 확인하세요.")
     st.stop()  # 이후 API 요청을 실행하지 않는다. 서버 프로세스 종료가 아니다.

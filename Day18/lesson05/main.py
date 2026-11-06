@@ -5,7 +5,7 @@ import httpx
 import streamlit as st
 from dotenv import load_dotenv
 
-load_dotenv(".env", override=False, interpolate=False)  # 현재 폴더·기존 환경 우선·문자열 치환 끔.
+load_dotenv(override=False, interpolate=False)  # 현재 폴더·기존 환경 우선·문자열 치환 끔.
 API_BASE_URL = os.getenv("API_BASE_URL", "").strip().rstrip("/")
 if not API_BASE_URL or not API_BASE_URL.startswith(("http://", "https://")):
     st.error("API_BASE_URL 설정을 확인하세요.")

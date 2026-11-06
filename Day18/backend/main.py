@@ -153,15 +153,15 @@ def require_user(credentials: Annotated[HTTPAuthorizationCredentials | None, Dep
 
 @app.post("/auth/login")
 def login(body: LoginInput, response: Response):
-    try:
-        with httpx.Client(timeout=10.0) as http_client:
-            result = make_client(http_client).auth.sign_in_with_password({
-                "email": body.email.strip(), "password": body.password.get_secret_value(),
-            })
-    except AuthApiError as exc:
-        raise_auth_error(exc)
-    except (AuthRetryableError, httpx.HTTPError):
-        raise HTTPException(503, "인증 서비스와 통신할 수 없습니다.") from None
+    # try:
+    with httpx.Client(timeout=10.0) as http_client:
+        result = make_client(http_client).auth.sign_in_with_password({
+            "email": body.email.strip(), "password": body.password.get_secret_value(),
+        })
+    # except AuthApiError as exc:
+    #     raise_auth_error(exc)
+    # except (AuthRetryableError, httpx.HTTPError):
+    #     raise HTTPException(503, "인증 서비스와 통신할 수 없습니다.") from None
     if result.session is None or result.user is None or result.session.expires_at is None:
         raise HTTPException(502, "인증 응답을 확인할 수 없습니다.")
     # Redis 세션이 원래 JWT보다 오래 살아남지 않도록 더 짧은 수명을 사용한다.
