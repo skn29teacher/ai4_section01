@@ -1,0 +1,87 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\lesson02\\main.py||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:lesson02\\main.py||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\lesson01\\main.py||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:lesson01\\main.py||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\TODAY_GUIDE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownPreview",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:TODAY_GUIDE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|MarkdownPreview"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\TODAY_GUIDE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:TODAY_GUIDE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.py",
+              "DocumentMoniker": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\lesson02\\main.py",
+              "RelativeDocumentMoniker": "lesson02\\main.py",
+              "ToolTip": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\lesson02\\main.py",
+              "RelativeToolTip": "lesson02\\main.py",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-11-09T03:08:34.812Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "main.py",
+              "DocumentMoniker": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\lesson01\\main.py",
+              "RelativeDocumentMoniker": "lesson01\\main.py",
+              "ToolTip": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\lesson01\\main.py",
+              "RelativeToolTip": "lesson01\\main.py",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-11-09T03:08:24.208Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TODAY_GUIDE.md [\uBBF8\uB9AC \uBCF4\uAE30]",
+              "DocumentMoniker": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\TODAY_GUIDE.md",
+              "RelativeDocumentMoniker": "TODAY_GUIDE.md",
+              "ToolTip": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\TODAY_GUIDE.md [\uBBF8\uB9AC \uBCF4\uAE30]",
+              "RelativeToolTip": "TODAY_GUIDE.md [\uBBF8\uB9AC \uBCF4\uAE30]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-09T03:06:13.268Z",
+              "EditorCaption": " [\uBBF8\uB9AC \uBCF4\uAE30]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TODAY_GUIDE.md",
+              "DocumentMoniker": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\TODAY_GUIDE.md",
+              "RelativeDocumentMoniker": "TODAY_GUIDE.md",
+              "ToolTip": "C:\\Users\\Playdata\\Downloads\\KDT_Groq_MultiTurn_Morning01_04\\TODAY_GUIDE.md",
+              "RelativeToolTip": "TODAY_GUIDE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-11-09T03:06:10.024Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
