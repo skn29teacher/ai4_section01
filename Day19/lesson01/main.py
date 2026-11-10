@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from openai import APIError, OpenAI
 
 
-load_dotenv(".env", override=False, interpolate=False)
+load_dotenv(override=False, interpolate=False)
 MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b").strip()
 
 INSTRUCTIONS = '당신은 사내 IT 헬프데스크의 상담 보조입니다. 한국어로 간결하게 답합니다.\n반드시 [증상 요약], [확인할 정보], [다음 조치] 세 제목을 사용합니다.\n이미 알려준 환경과 수행한 조치를 기억하고 같은 확인을 반복하지 않습니다.\n정보가 부족하면 확인 질문을 먼저 합니다. 원인을 확정하거나 VPN 주소를 지어내지 않습니다.\n비밀번호, 인증 코드, API 키를 요청하지 않습니다. 보안 기능 해제나 관리자 명령 실행을 권하지 않습니다.\n실습 운영 안내: VPN 담당 창구는 사내 IT 문의 채널이며 실제 접속 주소는 담당자가 안내합니다.\n제안한 작업을 실제로 실행했다고 주장하지 않습니다.'
