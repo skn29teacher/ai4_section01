@@ -10,7 +10,7 @@ from openai import OpenAI
 
 
 # Cloud의 최상위 Secrets 환경변수가 로컬 파일보다 우선합니다.
-load_dotenv(".env", override=False, interpolate=False)
+load_dotenv(override=False, interpolate=False)
 MODEL = "openai/gpt-oss-20b"
 MAX_HISTORY = 20
 BATCH_CHARS = 80
@@ -124,7 +124,7 @@ def batch_text(chunks, max_chars=BATCH_CHARS, max_seconds=BATCH_SECONDS,
 
 
 def requires_reason(rating):
-    return False
+    return rating == 0
 
 
 def make_record(item, rating, reason):
