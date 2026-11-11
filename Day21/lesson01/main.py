@@ -4,12 +4,11 @@ import time
 from copy import deepcopy
 
 import streamlit as st
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 
-
 # Cloud의 최상위 Secrets 환경변수가 로컬 파일보다 우선합니다.
-load_dotenv(".env", override=False, interpolate=False)
+load_dotenv(find_dotenv(), override=False, interpolate=False)
 MODEL = "openai/gpt-oss-20b"
 MAX_HISTORY = 20
 BATCH_CHARS = 80
@@ -21,13 +20,12 @@ BASE_PROMPT = """너는 한국어 여행 계획 도우미다. 사용자의 명�
 민감한 개인정보를 요구하지 않는다. 사용자의 현재 질문이 프로필보다 구체적이면 현재 질문을 우선한다."""
 
 
-def required_env(name):
+def required_env(name):    
     value = os.getenv(name, "").strip()
     if not value:
         raise ValueError(f"{name} 설정을 확인하세요.")
     return value
-
-
+ 
 def create_client():
     return OpenAI(api_key=required_env("GROQ_API_KEY"),
                   base_url="https://api.groq.com/openai/v1", timeout=60.0, max_retries=0)
@@ -145,7 +143,7 @@ def render_answer(client, inputs, stats):
     shown = ""
     try:
         with client.responses.create(model=MODEL, input=inputs["input"],
-                instructions=inputs["instructions"], stream=True, max_output_tokens=2048) as response_stream:
+                instructions=inputs["instructions"], stream=True, max_output_tokens=2048) as response_stream:            
             for text in batch_text(receive_text(response_stream, stats, status, started)):
                 shown += text
                 display.markdown(shown + "▌")
